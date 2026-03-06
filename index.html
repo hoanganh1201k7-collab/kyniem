@@ -36,7 +36,7 @@
         .dot.active { background: var(--primary); transform: scale(1.2); }
 
         .numpad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; justify-items: center; }
-        .num-btn {width: 55px; height: 55px; border-radius: 50%; border: none; background: white; color: var(--primary); font-size: 1.3rem; font-weight: bold; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 8px rgba(0,0,0,0.05);-webkit-tap-highlight-color: transparent; }
+        .num-btn {width: 55px; height: 55px; border-radius: 50%; border: none; background: white; color: var(--primary); font-size: 1.3rem; font-weight: bold; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 8px rgba(0,0,0,0.05);-webkit-tap-highlight-color: transparent; touch-action: manipulation;}
         .num-btn:active { background: var(--primary); color: white; transform: scale(0.9); }
         .num-btn.delete { color: #ff4d6d; font-size: 1rem; }
 
