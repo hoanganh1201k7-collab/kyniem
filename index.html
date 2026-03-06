@@ -38,7 +38,7 @@
         .numpad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; justify-items: center; }
         .num-btn {width: 55px; height: 55px; border-radius: 50%; border: none; background: white; color: var(--primary); font-size: 1.3rem; font-weight: bold; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 8px rgba(0,0,0,0.05);-webkit-tap-highlight-color: transparent; touch-action: manipulation;}
         .num-btn:active { background: var(--primary); color: white; transform: scale(0.9); }
-        .num-btn.delete { color: #ff4d6d; font-size: 1rem; }
+        .num-btn.delete { color: var(--primary); font-size: 1rem; }
 
         #menu-screen { display: none; grid-template-columns: repeat(2, 1fr); gap: 20px; width: 90%; max-width: 500px; z-index: 20; }
         .menu-item { background: rgba(255, 255, 255, 0.7); padding: 30px 15px; border-radius: 25px; text-align: center; box-shadow: 0 10px 20px rgba(255, 117, 140, 0.1); cursor: pointer; transition: 0.3s; display: flex; flex-direction: column; align-items: center; border: 2px solid transparent; }
