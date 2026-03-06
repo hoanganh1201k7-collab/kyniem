@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cẩm Lê</title>
+    <link rel="icon" type="image/png" href="anh/ChatGPT Image 14_27_48 31 thg 12, 2025.png">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary: #ff758c; --bg-pink: #ffeef0; }
+        
+        body { margin: 0; padding: 0; font-family: 'Quicksand', sans-serif; background-color: var(--bg-pink); overflow-x: hidden; }
+
+        .bg-text { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); font-family: 'Dancing Script', cursive; font-size: 20vw; color: rgba(255, 117, 140, 0.12); white-space: nowrap; pointer-events: none; z-index: 1; user-select: none; }
+
+        #heart-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 999; }
+        .heart { position: absolute; top: -10%; font-size: 20px; color: #ff4d6d; animation: fall linear infinite; }
+        .flower { position: absolute; top: -10%; font-size: 30px; animation: fall linear infinite; z-index: 151; }
+        @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
+
+        .wrapper { height: 100vh; display: flex; justify-content: center; align-items: center; position: relative; z-index: 10; padding: 10px; box-sizing: border-box;}
+
+        .card { background: rgba(255, 255, 255, 0.3); padding: 25px; border-radius: 40px; box-shadow: 0 15px 35px rgba(255, 117, 140, 0.2); display: flex; width: 90%; max-width: 700px; gap: 30px; align-items: center; 
+        box-sizing: border-box; 
+        margin: 0 auto; }
+        .card-left { flex: 1; display: flex; justify-content: center; }
+        .card-left img { width: 100%; border-radius: 25px; object-fit: cover; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .card-right { flex: 1.2; text-align: center; }
+
+        .timer { display: flex; justify-content: center; gap: 8px; margin-bottom: 20px; }
+        .timer-item { background: var(--primary); color: white; width: 70px; padding: 12px 0; border-radius: 12px; font-weight: bold; font-size: 1rem; }
+        .timer-item span { display: block; font-size: 0.8rem; opacity: 0.8; }
+
+        .passcode-dots { display: flex; justify-content: center; gap: 15px; margin-bottom: 25px; }
+        .dot { width: 14px; height: 14px; border: 2px solid var(--primary); border-radius: 50%; transition: 0.3s; }
+        .dot.active { background: var(--primary); transform: scale(1.2); }
+
+        .numpad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; justify-items: center; }
+        .num-btn {width: 55px; height: 55px; border-radius: 50%; border: none; background: white; color: var(--primary); font-size: 1.3rem; font-weight: bold; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 8px rgba(0,0,0,0.05);-webkit-tap-highlight-color: transparent; }
+        .num-btn:active { background: var(--primary); color: white; transform: scale(0.9); }
+        .num-btn.delete { color: #ff4d6d; font-size: 1rem; }
+
+        #menu-screen { display: none; grid-template-columns: repeat(2, 1fr); gap: 20px; width: 90%; max-width: 500px; z-index: 20; }
+        .menu-item { background: rgba(255, 255, 255, 0.7); padding: 30px 15px; border-radius: 25px; text-align: center; box-shadow: 0 10px 20px rgba(255, 117, 140, 0.1); cursor: pointer; transition: 0.3s; display: flex; flex-direction: column; align-items: center; border: 2px solid transparent; }
+        .menu-item:hover { transform: translateY(-5px); border-color: var(--primary); }
+        .menu-item img { width: 60px; height: 60px; margin-bottom: 12px; }
+        .menu-item span { font-weight: 600; color: var(--primary); font-size: 1rem; }
+
+        #music-player { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; width: 90%; max-width: 350px; padding: 25px; border-radius: 30px; box-shadow: 0 15px 40px rgba(255, 117, 140, 0.3); z-index: 200; text-align: center; border: 5px solid #fff; }
+        .music-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; color: var(--primary); font-weight: bold; }
+        .cd-thumb { width: 180px; height: 180px; border-radius: 50%; margin: 0 auto 20px; background-size: cover; background-position: center; border: 8px solid #fce4ec; animation: rotate 10s linear infinite; animation-play-state: paused; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .song-title { color: var(--primary); font-size: 1.4rem; font-weight: 700; margin: 10px 0; }
+        
+        .music-header  {
+            font-size: 1.3rem;
+        }
+        #progress {
+            -webkit-appearance: none;
+            flex: 1;
+            height: 6px; 
+            background: #eee;
+            border-radius: 5px;
+            outline: none;
+            cursor: pointer;
+            background-image: linear-gradient(var(--primary), var(--primary));
+            background-size: 0% 100%;
+            background-repeat: no-repeat;
+        }
+        #progress::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 18px;
+            width: 18px;
+            border-radius: 50%;
+            background: var(--primary);
+            cursor: pointer;
+            border: 2px solid #fff;
+        }
+
+        .controls { display: flex; justify-content: center; align-items: center; gap: 20px; margin: 20px 0; }
+        .btn-control { background: none; border: none; color: var(--primary); font-size: 1.8rem; cursor: pointer; }
+        .btn-play { background: var(--primary); color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; border: none !important; cursor: pointer; }
+        
+        .playlist { text-align: left; margin-top: 20px; max-height: 120px; overflow-y: auto; }
+        .playlist-item { display: flex; align-items: center; gap: 10px; padding: 8px; border-radius: 10px; cursor: pointer; transition: 0.2s; margin-bottom: 5px; background: #fff9fa; border: 1px solid #ffebee; }
+        .playlist-item.active { background: #ffebee; border-color: var(--primary); }
+        .playlist-item img { width: 40px; height: 40px; border-radius: 8px; }
+        .playlist-item span { font-size: 0.9rem; color: #444; font-weight: 600; }
+
+        #flower-garden { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100vh; z-index: 150; background: linear-gradient(to bottom, #fff0f3, #ffccd5); flex-direction: column; align-items: center; justify-content: center; overflow: hidden; }
+        .wish-card { background: rgba(255, 255, 255, 0.75); padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(255, 117, 140, 0.3); text-align: center; max-width: 80%; z-index: 152; border: 2px dashed var(--primary); transform: scale(0); animation: popIn 0.8s forwards; }
+        @keyframes popIn { to { transform: scale(1); } }
+        .btn-back { margin-top: 20px; background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 20px; cursor: pointer; font-family: 'Quicksand'; font-size: 1rem; }
+
+        #meme-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.9); z-index: 1000; flex-direction: column; justify-content: center; align-items: center; color: white; text-align: center; }
+        #meme-overlay img { width: 250px; border-radius: 20px; border: 4px solid white; margin-bottom: 15px; }
+
+        #photo-slider { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100vh; z-index: 100; align-items: center; overflow: hidden; background: var(--bg-pink); }
+        .photo-track { display: flex; position: absolute; left: 100%; transition: transform 18s linear; }
+        .photo-item { width: 280px; height: 380px; object-fit: cover; margin-right: 25px; border: 10px solid white; border-radius: 5px; flex-shrink: 0; }
+        #letter-screen { display: none; width: 90%; max-width: 600px; z-index: 10; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+        .letter-box { background: white; padding: 30px; border-radius: 15px; border-left: 8px solid var(--primary); line-height: 1.8; color: #444; position: relative; }
+        .close-btn { position: absolute; top: 10px; right: 15px; font-size: 23px; cursor: pointer; color: var(--primary); font-weight: bold; }
+
+        .shake { animation: shake 0.4s ease-in-out; }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 75% { transform: translateX(10px); } }
+
+        @media (max-width: 768px) { 
+        .card { flex-direction: column; 
+                width: 97%; 
+                padding: 30px 20px; 
+                gap: 20px; 
+                border-radius: 30px; 
+                margin: auto;} 
+        .card-left { 
+            display: none; 
+        }
+        .card-right { 
+            width: 100%; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .timer-item {
+                width: 60px;
+                padding: 8px 0;
+                font-size: 0.9rem;
+            } 
+        .num-btn { width: 70px; height: 70px; font-size: 1.6rem;} 
+        .numpad {
+        gap: 18px; }
+        #menu-screen { gap: 15px; } }
+        .gift-modal {
+            display: none; 
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(27, 27, 27, 0.85); 
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .gift-content {
+            position: relative;
+            width: 90%;
+            max-width: 800px;
+            height: 80vh;
+            background: #000000;
+            border: 3px solid var(--primary);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 0 30px rgba(255, 117, 140, 0.5);
+        }
+
+        .gift-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .close-gift {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 35px;
+            color: white;
+            cursor: pointer;
+            z-index: 10002;
+            transition: 0.3s;
+        }
+
+        .close-gift:hover {
+            color: var(--primary);
+            transform: scale(1.2);
+        }
+        .voice83 {
+          background: white;
+          border: 2px solid #ff758c; 
+          color: #ff758c; 
+          padding: 10px 25px; 
+          border-radius: 25px; 
+          cursor: pointer; 
+          display: flex; 
+          align-items: center; 
+          gap: 10px;
+          font-weight: bold;
+          margin: 0 auto;
+        }
+    
+        .voice83 {
+            padding: 12px 25px;
+            border-radius: 30px;
+            border: none;
+            cursor: pointer;
+            background: linear-gradient(45deg, #fa9fa2, #ffffff);
+            color: #f96b82;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 117, 140, 0.5);
+            -webkit-tap-highlight-color: transparent;
+            outline: none;
+        }
+        .voice83:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 20px rgba(255, 117, 140, 0.5); 
+        }
+
+        .voice83:active {
+            transform: scale(0.95); 
+        }
+    </style>
+</head>
+<body>
+    <div id="flowerModal" class="gift-modal">
+    <div class="gift-content">
+        <span class="close-gift" onclick="closeFlowerGift()">&times;</span>
+        <iframe src="flower.html" class="gift-iframe"></iframe>
+    </div>
+    </div>
+    <div class="bg-text">Cẩm Lê</div>
+
+    <audio id="mainAudio"></audio>
+    <audio id="wrong1"><source src="nhac/sai1.mp3" type="audio/mpeg"></audio>
+    <audio id="wrong2"><source src="nhac/sai2.mp3" type="audio/mpeg"></audio>
+    <audio id="wrong3"><source src="nhac/sai3.mp3" type="audio/mpeg"></audio>
+    <audio id="clickSound"><source src="nhac/click.mp3" type="audio/mpeg"></audio>
+
+    <div id="heart-container"></div>
+
+    <div id="meme-overlay">
+        <img src="anh/con-meo-khoc-meme-40.jpg" alt="Mèo khóc">
+        <h2 id="meme-text">Sai rồi!</h2>
+        <p>Phạt ngắm mèo khóc 5 giây mới cho nhập lại!</p>
+    </div>
+
+    <div class="wrapper">
+        <div id="lock-screen">
+            <div class="card">
+                <div class="card-left"><img src="anh/IMG_4118.jpg" alt="Memory"></div>
+                <div class="card-right">
+                    <div style="color: var(--primary); font-size: 2rem; margin-bottom: 10px;">❤️</div>
+                    <div class="timer">
+                        <div class="timer-item"><div id="days">00</div><span>Ngày</span></div>
+                        <div class="timer-item"><div id="hours">00</div><span>Giờ</span></div>
+                        <div class="timer-item"><div id="minutes">00</div><span>Phút</span></div>
+                        <div class="timer-item"><div id="seconds">00</div><span>Giây</span></div>
+                    </div>
+                    <div class="passcode-dots">
+                        <div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+                    </div>
+                    <div class="numpad">
+                        <button class="num-btn" onclick="press('1')">1</button>
+                        <button class="num-btn" onclick="press('2')">2</button>
+                        <button class="num-btn" onclick="press('3')">3</button>
+                        <button class="num-btn" onclick="press('4')">4</button>
+                        <button class="num-btn" onclick="press('5')">5</button>
+                        <button class="num-btn" onclick="press('6')">6</button>
+                        <button class="num-btn" onclick="press('7')">7</button>
+                        <button class="num-btn" onclick="press('8')">8</button>
+                        <button class="num-btn" onclick="press('9')">9</button>
+                        <button class="num-btn" onclick="const clickBtn = document.getElementById('clickSound'); clickBtn.currentTime = 0; clickBtn.play(); setTimeout(() => { window.open('https://www.instagram.com/hoanganhh_1201?igsh=cnUzeGIxZjI4YTI5&utm_source=qr', '_blank'); }, 100);">!</button>
+                        <button class="num-btn" onclick="press('0')">0</button>
+                        <button class="num-btn delete" onclick="del()">✖</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="menu-screen">
+            <div class="menu-item" onclick="start83()">
+                <img src="https://cdn-icons-png.flaticon.com/128/16004/16004954.png" alt="8-3">
+                <span>Ngày 8/3</span>
+            </div>
+            <div class="menu-item" onclick="startAnniversary()">
+                <img src="https://cdn-icons-png.flaticon.com/512/1358/1358994.png" alt="1 Year">
+                <span>Kỷ niệm 1 năm</span>
+            </div>
+            <div class="menu-item" onclick="openMusicPlayer()">
+                <img src="https://cdn-icons-png.flaticon.com/512/3844/3844724.png" alt="Music">
+                <span>Nhạc</span>
+            </div>
+            <div class="menu-item" onclick="openFlowerGift()">
+                <img src="https://cdn-icons-png.flaticon.com/512/4213/4213958.png" alt="Flower Gift">
+                <span>Quà cho bíe</span>
+            </div>
+        </div>
+
+        <div id="music-player">
+            <div class="music-header">
+                <span>Nhạc 🎧</span>
+                <span style="cursor: pointer;" onclick="closeMusicPlayer()">✖</span>
+            </div>
+            <div class="cd-thumb" id="cd-thumb"></div>
+            <div class="song-title" id="song-title">Đang tải...</div>
+            <div style="margin: 15px 0;">
+                <div style="display: flex; align-items: center; gap: 10px; margin: 20px 0;">
+                    <span id="current-time" style="font-size: 0.75rem; color: #666; min-width: 35px;">0:00</span>
+                    <input id="progress" type="range" value="0" step="1" min="0" max="100" style="flex: 1;">
+                    <span id="duration-time" style="font-size: 0.75rem; color: #666; min-width: 35px;">0:00</span>
+                </div>
+            </div>
+
+            <div class="controls">
+                <button class="btn-control" onclick="prevSong()">⏮</button>
+                <button class="btn-play" id="play-btn" onclick="togglePlay()">▶</button>
+                <button class="btn-control" onclick="nextSong()">⏭</button>
+            </div>
+            <div class="playlist" id="playlist"></div>
+        </div>
+
+        <div id="flower-garden">
+            <div id="flower-container"></div>
+            <div class="wish-card">
+                <h2 style="font-family: 'Dancing Script'; color: var(--primary); font-size: 2rem;">Happy Women's Day! 🌹</h2>
+                <p id="flower-wish" style="font-size: 1.1rem; color: #444; line-height: 1.6;"></p>
+                <div style="margin: 20px 0;">
+
+                <button onclick="playVoice83()" class="voice83">
+                    <span id="voiceIcon83">▶ Em nghe đi cho tuiii😠</span> 
+                </button>
+                <audio id="audio83">
+                    <source src="nhac/loinhan.mp3" type="audio/mpeg">
+                </audio>
+            </div>
+                <button class="btn-back" onclick="closeGarden()">Trở lại</button>
+            </div>
+        </div>
+
+        <div id="photo-slider">
+            <div class="photo-track" id="track">
+                <img src="anh/att.cky57rDAmtj_kxL0gtArqWVGsh-glW5607ZzyHcJbU0.jpeg" class="photo-item">
+                <img src="anh/IMG_0958.jpeg" class="photo-item"><img src="anh/IMG_2414.jpeg" class="photo-item">
+                <img src="anh/att.lbzF_hC-eTI2bdSKsqSpGZ-FWLBtY3FAm22qg5GlNTg.jpeg" class="photo-item">
+                <img src="anh/att.pSMw0mpxj6wQkHxQu2aZ2BqCxofoY00kqIYQhCEOitI.jpeg" class="photo-item">
+                <img src="anh/IMG_0853.jpeg" class="photo-item"><img src="anh/IMG_0857.png" class="photo-item">
+                <img src="anh/IMG_1322.jpeg" class="photo-item"><img src="anh/IMG_2200.png" class="photo-item">
+                <img src="anh/att.jUAzdSpViTpREDdcDNiS_fXxwfFkyO46JXhV5vbuSB8.jpeg" class="photo-item">
+                <img src="anh/IMG_1273.PNG" class="photo-item"><img src="anh/IMG_6129.jpeg" class="photo-item">
+                <img src="anh/IMG_8182.jpeg" class="photo-item"><img src="anh/IMG_0883.jpeg" class="photo-item">
+                <img src="anh/att.3Mw2j5lSQuZmSJxtRSVb__3m_XZ4ytyxe7u_7h3J-aM.jpeg" class="photo-item">
+            </div>
+        </div>
+
+        <div id="letter-screen">
+            <div class="letter-box">
+                <div class="close-btn" onclick="backToMenu()">✖</div>
+                <h1 style="font-size: 1.8rem; font-family: 'Dancing Script'; color: var(--primary);">Gửi iem bíe,</h1>
+                <div id="typewriter"></div>
+                <p style="text-align:right; font-family:'Dancing Script'; font-size: 1.5rem; color: var(--primary); margin-top: 15px;">Yêu em nhìuuu❤️!</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let playlistCurrentTime = 0;
+        let wasPlayingBeforeAnniversary = false;
+        const startDate = new Date(2024, 11, 30); 
+        const CORRECT_PIN = "301224"; 
+        const letterMessage = `Kỷ niệm 1 năm bên nhau... Đã có rất nhiều những khoảnh khắc đẹp nhưng cũng không ít những chuyện buồn. Anh biết anh không phải người hoàn hảo hay tốt đẹp, vẫn có rất nhiều thiếu sót hay vô tâm nhưng anh vẫn luôn cố gắng luôn thay đổi để xứng đáng với em hơn. Xin lỗi vì nhiều lúc để em cảm thấy tủi thân thấy buồn vì những việc anh đã làm, anh hứa sẽ cố gắng không để em phải buồn nhiều nữa. Cũng cảm ơn em vì đã quan tâm, chăm sóc, luôn lo lắng và suy nghĩ tới anh. Anh thật sự rất may mắn khi có em, em là một người siu quan trọng với anh. Mong rằng chúng mình mãi bên nhau như này nhé.🥹`;
+        const wishes83 = "Chúc bé Cửm Lê ngày 8/3 thật vui vẻ, xinh đẹp và lun hạnh phúc nhó! Yêu cục cứt nhìuu ❤️ 🌹. Khum cóa hoa tươi tặng bé nhưng mà bé thử bấm vô phần quà ở bên ngoài nhó.😘😘😘";
+
+        const songs = [
+            { title: "Bình yên", src: "nhac/binhyen.mp3", img: "anh/IMG_1502.png" },
+            { title: "Nơi Này Có Anh", src: "nhac/noinaycoanh.mp3", img: "anh/IMG_1273.PNG" },
+            { title: "Không yêu em thì yêu ai?", src: "nhac/khongyeuemthiyeuai.mp3", img: "anh/IMG_2200.png" },
+            { title: "Nàng công chúa nhỏ", src: "nhac/nangcongchuanho.mp3", img: "anh/IMG_0958.jpeg" }
+        ];
+
+        let currentPin = "";
+        let wrongCount = 0;
+        let songIndex = 0;
+        let typingTimeout; 
+        let isPlaying = false;
+        let flowerInterval;
+
+        const mainAudio = document.getElementById('mainAudio');
+        const playBtn = document.getElementById('play-btn');
+        const cdThumb = document.getElementById('cd-thumb');
+        const songTitle = document.getElementById('song-title');
+        const progress = document.getElementById('progress');
+        const currentTimeDisplay = document.getElementById('current-time');
+        const durationTimeDisplay = document.getElementById('duration-time');
+
+        function formatTime(seconds) {
+            let min = Math.floor(seconds / 60);
+            let sec = Math.floor(seconds % 60);
+            if (sec < 10) sec = `0${sec}`;
+            return `${min}:${sec}`;
+        }
+
+        function loadSong(index) {
+            mainAudio.src = songs[index].src;
+            songTitle.innerText = songs[index].title;
+            cdThumb.style.backgroundImage = `url('${songs[index].img}')`;
+            progress.value = 0;
+            progress.style.backgroundSize = '0% 100%';
+            mainAudio.onended = function() { nextSong(); };
+            renderPlaylist();
+            if ('mediaSession' in navigator) {
+                navigator.mediaSession.metadata = new MediaMetadata({
+                    title: songs[index].title,
+                    artist: 'Cẩm Lê - Kỷ Niệm', 
+                    album: 'Our Memories',
+                    artwork: [
+                        { src: songs[index].img, sizes: '512x512', type: 'image/png' }
+                    ]
+                });
+            }
+        }
+
+        mainAudio.ontimeupdate = function() {
+            if (mainAudio.duration) {
+                const progressPercent = Math.floor(mainAudio.currentTime / mainAudio.duration * 100);
+                progress.value = progressPercent;
+                progress.style.backgroundSize = progressPercent + '% 100%';
+                currentTimeDisplay.innerText = formatTime(mainAudio.currentTime);
+                durationTimeDisplay.innerText = formatTime(mainAudio.duration);
+            }
+        };
+
+        progress.oninput = function(e) {
+            const seekTime = (mainAudio.duration / 100) * e.target.value;
+            mainAudio.currentTime = seekTime;
+        };
+
+        mainAudio.onended = function() { nextSong(); };
+
+        function togglePlay() { isPlaying ? pauseSong() : playSong(); }
+        function playSong() { isPlaying = true; mainAudio.play(); playBtn.innerText = "⏸"; cdThumb.style.animationPlayState = "running"; }
+        function pauseSong() { isPlaying = false; mainAudio.pause(); playBtn.innerText = "▶"; cdThumb.style.animationPlayState = "paused"; }
+        function nextSong() { songIndex = (songIndex + 1) % songs.length; loadSong(songIndex); playSong(); }
+        function prevSong() { songIndex = (songIndex - 1 + songs.length) % songs.length; loadSong(songIndex); playSong(); }
+        function selectSong(index) { songIndex = index; loadSong(index); playSong(); }
+
+        function renderPlaylist() {
+            const playlist = document.getElementById('playlist');
+            playlist.innerHTML = songs.map((song, i) => `
+                <div class="playlist-item ${i === songIndex ? 'active' : ''}" onclick="selectSong(${i})">
+                    <img src="${song.img}">
+                    <span>${song.title}</span>
+                </div>
+            `).join('');
+        }
+
+        function press(num) {
+            const clickBtn = document.getElementById('clickSound');
+            clickBtn.currentTime = 0; 
+            clickBtn.play();
+            if (currentPin.length < 6) {
+                currentPin += num;
+                updateDots();
+                if (currentPin.length === 6) setTimeout(checkPin, 300);
+            }
+        }
+        function del() { 
+            const clickBtn = document.getElementById('clickSound');
+            clickBtn.currentTime = 0;
+            clickBtn.play();
+            currentPin = currentPin.slice(0, -1); 
+            updateDots(); 
+        }
+        function updateDots() {
+            const dots = document.querySelectorAll('.dot');
+            dots.forEach((dot, i) => i < currentPin.length ? dot.classList.add('active') : dot.classList.remove('active'));
+        }
+
+        function checkPin() {
+            const card = document.querySelector('.card');
+            const memeOverlay = document.getElementById('meme-overlay');
+            const soundIds = ['wrong1', 'wrong2', 'wrong3']; 
+            
+            if (currentPin === CORRECT_PIN) {
+                document.getElementById('lock-screen').style.display = 'none';
+                document.getElementById('menu-screen').style.display = 'grid';
+                loadSong(songIndex);
+            } else {
+                const errSound = document.getElementById(soundIds[wrongCount % soundIds.length]);
+                if (errSound) errSound.play();
+                
+                wrongCount++;
+                card.classList.add('shake');
+                memeOverlay.style.display = 'flex';
+                setTimeout(() => { 
+                    memeOverlay.style.display = 'none'; 
+                    card.classList.remove('shake'); 
+                    currentPin = ""; 
+                    updateDots(); 
+                }, 5500);
+            }
+        }
+
+        function openMusicPlayer() { document.getElementById('menu-screen').style.display = 'none'; document.getElementById('music-player').style.display = 'block'; }
+        function closeMusicPlayer() { document.getElementById('music-player').style.display = 'none'; document.getElementById('menu-screen').style.display = 'grid'; }
+
+        function startAnniversary() { 
+            document.getElementById('menu-screen').style.display = 'none'; 
+            playlistCurrentTime = mainAudio.currentTime;
+            wasPlayingBeforeAnniversary = isPlaying;
+            mainAudio.src = "nhac/Nhac-nen.mp3"; 
+            songTitle.innerText = "Dành cho bíe ❤️";
+            mainAudio.onended = null;
+            playSong();
+            if ('mediaSession' in navigator) {
+                navigator.mediaSession.metadata = new MediaMetadata({
+                    title: "Dành cho bíe ❤️",
+                    artist: "Kỷ niệm 1 năm",
+                    artwork: [{ src: "anh/ChatGPT Image 14_27_48 31 thg 12, 2025.png", sizes: "512x512", type: "image/jpeg" }] 
+                });
+            } 
+            runPhotoSlider(); 
+        }
+
+        function runPhotoSlider() {
+            const slider = document.getElementById('photo-slider');
+            const track = document.getElementById('track');
+            track.style.transition = 'none';
+            track.style.transform = 'translateX(0)'; 
+            slider.style.display = 'flex';
+            setTimeout(() => {
+                track.style.transition = 'transform 18s linear'; 
+                track.style.transform = `translateX(-${track.offsetWidth + window.innerWidth}px)`;
+            }, 100);
+            setTimeout(() => {
+                slider.style.display = 'none';
+                mainAudio.volume = 0.3; 
+                showLetter();
+            }, 18500); 
+        }
+
+        function showLetter() {
+            document.getElementById('letter-screen').style.display = 'block';
+            document.getElementById("typewriter").innerHTML = "";
+            clearTimeout(typingTimeout); 
+            let i = 0;
+            function type() { 
+                if (i < letterMessage.length) { 
+                    document.getElementById("typewriter").innerHTML += letterMessage.charAt(i++); 
+                    typingTimeout = setTimeout(type, 50); 
+                } 
+            }
+            type();
+        }
+
+        function backToMenu() { 
+            document.getElementById('letter-screen').style.display = 'none'; 
+            document.getElementById('menu-screen').style.display = 'grid'; 
+            clearTimeout(typingTimeout);
+            document.getElementById("typewriter").innerHTML = ""; 
+            loadSong(songIndex);
+            mainAudio.onloadedmetadata = function() {
+                mainAudio.currentTime = playlistCurrentTime; 
+                if (wasPlayingBeforeAnniversary) {
+                    playSong();
+                } else {
+                    pauseSong(); 
+                }
+                mainAudio.volume = 1.0;
+                mainAudio.onloadedmetadata = null;
+            };
+        }
+
+        function start83() { 
+            document.getElementById('menu-screen').style.display = 'none'; 
+            document.getElementById('flower-garden').style.display = 'flex'; 
+            document.getElementById('flower-wish').innerText = wishes83; 
+            document.getElementById('flower-container').innerHTML = '';
+            document.getElementById('audio83').volume = 1.0;
+            flowerInterval = setInterval(createSingleFlower, 300); 
+        }
+        function playVoice83() {
+            const audio83 = document.getElementById('audio83');
+            const icon = document.getElementById('voiceIcon83');
+            const mainAudio = document.getElementById('mainAudio');
+            audio83.volume = 1.0;
+            if (audio83.paused) {
+                audio83.play();
+                icon.innerText = "⏸ Cảm động khum🥹"; 
+                mainAudio.volume = 0.2;
+            } else {
+                audio83.pause();
+                icon.innerText = "▶ Em nghe đi cho tuiii😠";
+                mainAudio.volume = 1.0;
+            }
+        }
+        function closeGarden() { 
+          clearInterval(flowerInterval);
+          document.getElementById('flower-garden').style.display = 'none'; 
+          document.getElementById('menu-screen').style.display = 'grid'; 
+          const audio83 = document.getElementById('audio83');
+          audio83.pause();
+          audio83.currentTime = 0; 
+          document.getElementById('voiceIcon83').innerText = "▶ Em nghe đi cho tuiii😠";
+          document.getElementById('mainAudio').volume = 1.0;
+          document.getElementById('flower-garden').style.display = 'none'; 
+          document.getElementById('menu-screen').style.display = 'grid';
+        }
+        function createSingleFlower() {
+            const container = document.getElementById('flower-container');
+            const icons = ['🌸', '🌹', '🌺', '🌷'];
+            const f = document.createElement('div'); 
+            
+            f.classList.add('flower'); 
+            f.innerHTML = icons[Math.floor(Math.random() * icons.length)];
+            f.style.left = Math.random() * 100 + 'vw'; 
+            f.style.animationDuration = (Math.random() * 3 + 2) + 's';
+            f.style.fontSize = (Math.random() * 20 + 20) + 'px'; 
+            container.appendChild(f);
+            setTimeout(() => f.remove(), 5000);
+        }
+
+        setInterval(() => {
+            const h = document.createElement('div'); h.classList.add('heart'); h.innerHTML = Math.random() > 0.5 ? '❤️' : '💗';
+            h.style.left = Math.random() * 100 + 'vw'; h.style.animationDuration = Math.random() * 3 + 2 + 's';
+            document.getElementById('heart-container').appendChild(h); setTimeout(() => h.remove(), 5000);
+        }, 350);
+
+        function updateTimer() {
+            const diff = Math.abs(new Date() - startDate);
+            document.getElementById('days').innerText = Math.floor(diff / 86400000);
+            document.getElementById('hours').innerText = Math.floor((diff / 3600000) % 24);
+            document.getElementById('minutes').innerText = Math.floor((diff / 60000) % 60);
+            document.getElementById('seconds').innerText = Math.floor((diff / 1000) % 60);
+        }
+        setInterval(updateTimer, 1000); updateTimer();
+        let wasPlayingBeforeGift = false; 
+        function openFlowerGift() {
+            const modal = document.getElementById('flowerModal');
+            modal.style.display = 'flex';
+            wasPlayingBeforeGift = isPlaying; 
+            if (isPlaying) {
+                pauseSong();
+            }
+        }
+
+        function closeFlowerGift() {
+            const modal = document.getElementById('flowerModal');
+            modal.style.display = 'none';
+            const iframe = document.querySelector('.gift-iframe');
+            const src = iframe.src;
+            iframe.src = ''; 
+            iframe.src = src;
+            if (wasPlayingBeforeGift) {
+                playSong();
+            }
+        }
+       
+        window.onclick = function(event) {
+            const modal = document.getElementById('flowerModal');
+            if (event.target == modal) {
+                closeFlowerGift();
+            }
+        }
+        document.getElementById('audio83').onended = function() {
+            document.getElementById('voiceIcon83').innerText = "▶ Em nghe đi cho tuiii😠";
+            document.getElementById('mainAudio').volume = 1.0;
+        };
+    </script>
+</body>
+</html>
